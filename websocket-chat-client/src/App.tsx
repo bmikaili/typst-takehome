@@ -3,11 +3,10 @@ import * as Y from 'yjs';
 import { HocuspocusProvider } from '@hocuspocus/provider';
 import styles from './ChatApp.module.css';
 
-const getColorForUsername = (username) => {
-  const hash = username.split('').reduce((acc, char) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
+const getColorForClientId = (clientId) => {
+  const hash = clientId.split('').reduce((acc, char) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
   return `hsl(${hash % 360}, 100%, 70%)`;
 };
-
 
 const ChatApp = () => {
   const [username, setUsername] = useState<string>('');
@@ -20,9 +19,8 @@ const ChatApp = () => {
   const bottomOfMessagesRef = useRef<HTMLDivElement>(null);
 
   let provider: HocuspocusProvider | null = null;
-  const clientId = useRef(Math.random().toString(36));
+  const clientId = useRef(Math.random().toString(2));
 
-  // Automatic scroll to the newest message
   useEffect(() => {
     bottomOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -103,7 +101,7 @@ const ChatApp = () => {
             key={index}
             className={message.clientId === clientId.current ? styles.myMessage : styles.otherMessage}
             style={{
-              backgroundColor: message.clientId === clientId.current ? 'white' : getColorForUsername(message.username),
+              backgroundColor: message.clientId === clientId.current ? 'white' : getColorForClientId(message.clientId),
             }}
           >
             <div>{message.text}</div>
