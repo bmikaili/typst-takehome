@@ -3,5 +3,4 @@ interface IMessage {
   username: string;
   text: string;
   timestamp: string;
-  isOwnMessage?: boolean;
 }
