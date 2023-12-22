@@ -33,15 +33,15 @@ const ChatApp = () => {
       document: ydoc.current,
     });
 
-    messageArray.current.observe(() => {
-      setMessages([...messageArray.current.toArray()]);
-    });
-
     providerRef.current.setAwarenessField('user', {
       clientId: clientId.current,
       username,
       isTyping: false,
       typingText: '',
+    });
+
+    messageArray.current.observe(() => {
+      setMessages([...messageArray.current.toArray()]);
     });
 
     const handleAwarenessUpdate = ({ states }) => {
