@@ -9,13 +9,15 @@ const getColorForUsername = () => {
 };
 
 const ChatApp = () => {
-  const userColor = useRef('');
   const [username, setUsername] = useState<string>('');
   const [readyToChat, setReadyToChat] = useState(false);
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
+
   const ydoc = useRef<Y.Doc>(new Y.Doc());
   const messageArray = useRef<Y.Array<IMessage>>(ydoc.current.getArray<IMessage>('messages'));
+  const userColor = useRef('');
+  const bottomOfMessagesRef = useRef<HTMLDivElement>(null);
 
   let provider: HocuspocusProvider | null = null;
   const clientId = useRef(Math.random().toString(36));
@@ -23,6 +25,13 @@ const ChatApp = () => {
   if (!userColor.current) {
     userColor.current = getColorForUsername();
   }
+
+
+
+  // Automatic scroll to the newest message
+  useEffect(() => {
+    bottomOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   useEffect(() => {
     provider = new HocuspocusProvider({
@@ -57,6 +66,17 @@ const ChatApp = () => {
     setInputValue(event.target.value);
   };
 
+  const handleChangeUsername = () => {
+    let newUsername = null;
+    while (!newUsername) {
+      newUsername = prompt('Please enter a new username:');
+      if (newUsername) {
+        setUsername(newUsername.trim());
+      }
+    }
+  };
+
+
   const startChat = () => {
     let newUsername = null;
     while (!newUsername) {
@@ -79,7 +99,9 @@ const ChatApp = () => {
     <div className={styles.chatContainer}>
       <div className={styles.header}>
         <h1>Group chat</h1>
-        <button>⚙️</button>
+        <button onClick={handleChangeUsername} className={styles.changeUsernameButton}>
+          Change Username
+        </button>
       </div>
       <div className={styles.messagesList}>
         {messages.map((message, index) => (
@@ -97,6 +119,7 @@ const ChatApp = () => {
             </div>
           </div>
         ))}
+        <div ref={bottomOfMessagesRef} />
       </div>
       <div className={styles.messageInputContainer}>
         <input
