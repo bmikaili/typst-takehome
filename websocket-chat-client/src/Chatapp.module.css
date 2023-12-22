@@ -1,13 +1,20 @@
-/* ChatApp.module.css */
+:root {
+  --background-color: #f7f7f7;
+  --button-bg-color: #007aff;
+  --button-bg-hover-color: #0066cc;
+  --font-family: 'Helvetica', sans-serif;
+}
+
 .chatContainer {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: #f7f7f7;
-  font-family: 'Helvetica', sans-serif;
+  background: var(--background-color);
+  font-family: var(--font-family);
 }
 
-.header, .messageInputContainer {
+.header,
+.messageInputContainer {
   border-bottom: 1px solid #ccc;
   display: flex;
   justify-content: space-between;
@@ -24,7 +31,8 @@
   flex-direction: column;
 }
 
-.myMessage, .otherMessage {
+.myMessage,
+.otherMessage {
   max-width: 60%;
   padding: 8px 12px;
   border-radius: 18px;
@@ -39,7 +47,6 @@
 
 .otherMessage {
   align-self: start;
-  background-color: #cfd8dc; 
   margin: 0 auto 8px 16px;
 }
 
@@ -67,7 +74,7 @@
 }
 
 .sendButton {
-  background-color: #007aff; 
+  background-color: var(--button-bg-color);
   color: white;
   border: none;
   padding: 8px 16px;
@@ -75,32 +82,33 @@
   cursor: pointer;
 }
 
-.sendButton:hover {
-  background-color: #0066cc;
+.sendButton:hover,
+.sendButton:focus {
+  background-color: var(--button-bg-hover-color);
 }
 
 .startChatButton {
-  display: flex; 
+  display: flex;
   justify-content: center;
   padding: 12px;
   align-self: center;
-  width: 50%; 
-  margin: auto; 
-  font-size: 1.2em; 
-  background-color: #007aff; 
+  width: 50%;
+  margin: auto;
+  font-size: 1.2em;
+  background-color: var(--button-bg-color);
   color: white;
   border: none;
-  border-radius: 25px; 
+  border-radius: 25px;
   cursor: pointer;
 }
 
 .startChatButton:hover {
-  background-color: #0066cc;
+  background-color: var(--button-bg-hover-color);
 }
 
 .startChatButtonContainer {
   display: flex;
-  justify-content: center; 
-  align-items: center; 
-  height: 100vh; 
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }

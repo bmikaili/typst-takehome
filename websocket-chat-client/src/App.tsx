@@ -33,7 +33,6 @@ const ChatApp = () => {
       isTyping: false,
     });
 
-    // Listen to updates in the shared array
     messageArray.current.observe(() => {
       setMessages([...messageArray.current.toArray()]);
     });
@@ -55,7 +54,6 @@ const ChatApp = () => {
     }
   }, [username, isTyping]);
 
-  // Add an effect for handling awareness updates
   useEffect(() => {
     if (provider) {
       provider.awareness?.on('update', () => {
