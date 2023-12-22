@@ -3,6 +3,12 @@
   --button-bg-color: #007aff;
   --button-bg-hover-color: #0066cc;
   --font-family: 'Helvetica', sans-serif;
+  --border-radius: 18px;
+  --common-padding: 8px 12px;
+  --common-margin: 0 auto 8px;
+  --border-style: 1px solid #ccc;
+  --text-color-light: rgba(0, 0, 0, 0.5);
+  --message-margin: 16px;
 }
 
 .chatContainer {
@@ -14,138 +20,121 @@
 }
 
 .header,
-.messageInputContainer {
-  border-bottom: 1px solid #ccc;
+.messageInputContainer,
+.typingBubble {
+  border-bottom: var(--border-style);
   display: flex;
-  justify-content: space-between;
   align-items: center;
   background: white;
   padding: 8px;
 }
 
-.messagesList {
+.header,
+.messageInputContainer {
+  justify-content: space-between;
+}
+
+.messagesList,
+.startChatButtonContainer {
   flex-grow: 1;
-  overflow: auto;
-  padding: 16px;
   display: flex;
   flex-direction: column;
 }
 
+.messagesList {
+  overflow: auto;
+  padding: 16px;
+}
+
 .myMessage,
-.otherMessage {
+.otherMessage,
+.typingBubble {
   max-width: 60%;
-  padding: 8px 12px;
-  border-radius: 18px;
+  padding: var(--common-padding);
+  border-radius: var(--border-radius);
   margin-bottom: 8px;
   background-color: white;
 }
 
 .myMessage {
-  align-self: end;
-  margin: 0 16px 8px auto;
+  align-self: flex-end;
+  margin-right: var(--message-margin);
 }
 
-.otherMessage {
-  align-self: start;
-  margin: 0 auto 8px 16px;
+.otherMessage,
+.typingBubble {
+  align-self: flex-start;
+  margin-left: var(--message-margin);
 }
 
-.messageMetadata {
+.typingBubble {
+  background-color: #cfd8dc;
+  flex-direction: column;
+}
+
+.messageMetadata,
+.typingUsername {
   display: flex;
-  gap: 10%;
   justify-content: space-between;
   font-size: 12px;
   margin-top: 4px;
   color: #555;
+  gap: 10%;
 }
 
-.typingIndicator {
+.typingIndicator,
+.typingText {
   font-style: italic;
   color: #888;
-  padding-left: 16px;
 }
 
 .inputField {
   flex-grow: 1;
-  padding: 8px 12px;
-  border-radius: 18px;
-  border: 1px solid #ccc;
+  padding: var(--common-padding);
+  border-radius: var(--border-radius);
+  border: var(--border-style);
   margin-right: 8px;
 }
 
-.sendButton {
+.sendButton,
+.startChatButton,
+.changeUsernameButton {
   background-color: var(--button-bg-color);
   color: white;
   border: none;
   padding: 8px 16px;
-  border-radius: 18px;
+  border-radius: var(--border-radius);
   cursor: pointer;
 }
 
 .sendButton:hover,
-.sendButton:focus {
-  background-color: var(--button-bg-hover-color);
-}
-
-.startChatButton {
-  display: flex;
-  justify-content: center;
-  padding: 12px;
-  align-self: center;
-  width: 50%;
-  margin: auto;
-  font-size: 1.2em;
-  background-color: var(--button-bg-color);
-  color: white;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-}
-
-.startChatButton:hover {
-  background-color: var(--button-bg-hover-color);
-}
-
-.startChatButtonContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.changeUsernameButton {
-  padding: 8px 16px;
-  border-radius: 18px;
-  background-color: var(--button-bg-color);
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
+.sendButton:focus,
+.startChatButton:hover,
 .changeUsernameButton:hover,
 .changeUsernameButton:focus {
   background-color: var(--button-bg-hover-color);
 }
 
-.typingBubble {
-  max-width: 60%;
-  padding: 8px 12px;
-  border-radius: 18px;
-  margin-bottom: 8px;
-  align-self: start;
-  background-color: #cfd8dc;
-  margin-left: 16px;
-  margin-right: auto;
+.startChatButton {
+  justify-content: center;
+  align-self: center;
+  width: 50%;
+  margin: auto;
+  font-size: 1.2em;
+  border-radius: 25px;
+}
+
+.startChatButtonContainer {
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .typingText {
-  color: rgba(0, 0, 0, 0.5);
-  font-style: italic;
+  color: var(--text-color-light);
 }
 
 .typingUsername {
-  display: block;
-  color: rgba(0, 0, 0, 0.5);
-  font-size: 12px;
-  margin-top: 4px;
+  color: var(--text-color-light);
+  align-self: flex-start;
 }
