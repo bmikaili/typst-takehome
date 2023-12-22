@@ -1,5 +1,9 @@
 {
-	"dependencies": {
-		"@hocuspocus/server": "^2.8.1"
-	}
+  "dependencies": {
+    "@hocuspocus/server": "^2.8.1"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "pnpm run build && node server.js"
+  }
 }
