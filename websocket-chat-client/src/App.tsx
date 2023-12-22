@@ -3,8 +3,8 @@ import * as Y from 'yjs';
 import { HocuspocusProvider } from '@hocuspocus/provider';
 import styles from './ChatApp.module.css';
 
-const getColorForClientId = (clientId) => {
-  const hash = clientId.split('').reduce((acc, char) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
+const getColorForClientId = (clientId: string) => {
+  const hash = clientId.split('').reduce((acc: number, char: string) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
   return `hsl(${hash % 360}, 100%, 70%)`;
 };
 
@@ -44,7 +44,7 @@ const ChatApp = () => {
       setMessages([...messageArray.current.toArray()]);
     });
 
-    const handleAwarenessUpdate = ({ states }) => {
+    const handleAwarenessUpdate = ({ states }: any) => {
       // Transform states into a Map or another suitable format
       const updatedStates = new Map();
       Object.keys(states).forEach(key => {
@@ -145,14 +145,14 @@ const ChatApp = () => {
           </div>
         ))}
 
-        {Array.from(awarenessStates.entries()).map(([key, value]) => {
+        {Array.from(awarenessStates.entries()).map(([, value]) => {
           const userAwareness = value.user;
           if (userAwareness && userAwareness.isTyping && userAwareness.clientId !== clientId.current) {
             return (
-            <div key={userAwareness.clientId} className={styles.typingBubble}>
-              <div className={styles.typingText}>{userAwareness.typingText}</div>
-              <div className={styles.typingUsername}>{userAwareness.username}</div>
-            </div>
+              <div key={userAwareness.clientId} className={styles.typingBubble}>
+                <div className={styles.typingText}>{userAwareness.typingText}</div>
+                <div className={styles.typingUsername}>{userAwareness.username}</div>
+              </div>
             );
           }
           return null;
