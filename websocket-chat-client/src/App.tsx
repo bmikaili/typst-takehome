@@ -103,7 +103,9 @@ const ChatApp = () => {
 
   if (!readyToChat) {
     return (
-      <button onClick={startChat}>Start Chat</button>
+      <div className={styles.startChatButtonContainer}>
+        <button className={styles.startChatButton} onClick={startChat}>Start Chat</button>
+      </div>
     );
   }
 

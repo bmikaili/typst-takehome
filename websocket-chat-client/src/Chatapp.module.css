@@ -7,12 +7,13 @@
   font-family: 'Helvetica', sans-serif;
 }
 
-.header {
+.header, .messageInputContainer {
   border-bottom: 1px solid #ccc;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: white;
+  padding: 8px;
 }
 
 .messagesList {
@@ -23,26 +24,23 @@
   flex-direction: column;
 }
 
-.myMessage {
+.myMessage, .otherMessage {
   max-width: 60%;
   padding: 8px 12px;
   border-radius: 18px;
   margin-bottom: 8px;
-  align-self: start;
   background-color: white;
-  margin-right: 16px; 
-  margin-left: auto;
+}
+
+.myMessage {
+  align-self: end;
+  margin: 0 16px 8px auto;
 }
 
 .otherMessage {
-  max-width: 60%;
-  padding: 8px 12px;
-  border-radius: 18px;
-  margin-bottom: 8px;
-  align-self: end;
+  align-self: start;
   background-color: #cfd8dc; 
-  margin-left: 16px; 
-  margin-right: auto;
+  margin: 0 auto 8px 16px;
 }
 
 .messageMetadata {
@@ -57,14 +55,7 @@
 .typingIndicator {
   font-style: italic;
   color: #888;
-  padding-left: 16px; /* Align with other messages */
-}
-
-.messageInputContainer {
-  display: flex;
-  padding: 16px;
-  background: white;
-  box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+  padding-left: 16px;
 }
 
 .inputField {
@@ -76,7 +67,7 @@
 }
 
 .sendButton {
-  background-color: #4CAF50; /* Green color for the button */
+  background-color: #007aff; 
   color: white;
   border: none;
   padding: 8px 16px;
@@ -85,5 +76,31 @@
 }
 
 .sendButton:hover {
-  background-color: #45a049;
+  background-color: #0066cc;
+}
+
+.startChatButton {
+  display: flex; 
+  justify-content: center;
+  padding: 12px;
+  align-self: center;
+  width: 50%; 
+  margin: auto; 
+  font-size: 1.2em; 
+  background-color: #007aff; 
+  color: white;
+  border: none;
+  border-radius: 25px; 
+  cursor: pointer;
+}
+
+.startChatButton:hover {
+  background-color: #0066cc;
+}
+
+.startChatButtonContainer {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  height: 100vh; 
 }
