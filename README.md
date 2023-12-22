@@ -11,3 +11,11 @@ In `websocket-chat-server`, run `pnpm install`.
 
 In `websocket-chat-client`, run `pnpm run dev`.
 In `websocket-chat-server`, run `pnpm run dev`.
+
+## Improvements
+- Check performance of the server
+- Split into more components
+- Use tailwindcss for styling
+- Use jotai for state management
+- Use million.js for rendering
+- Add tests
