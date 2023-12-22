@@ -13,12 +13,13 @@ const ChatApp = () => {
   const [readyToChat, setReadyToChat] = useState(false);
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
+  const [awarenessStates, setAwarenessStates] = useState(new Map());
 
   const ydoc = useRef<Y.Doc>(new Y.Doc());
   const messageArray = useRef<Y.Array<IMessage>>(ydoc.current.getArray<IMessage>('messages'));
   const bottomOfMessagesRef = useRef<HTMLDivElement>(null);
 
-  let provider: HocuspocusProvider | null = null;
+  const providerRef = useRef<HocuspocusProvider>(null);
   const clientId = useRef(Math.random().toString(2));
 
   useEffect(() => {
@@ -26,7 +27,7 @@ const ChatApp = () => {
   }, [messages]);
 
   useEffect(() => {
-    provider = new HocuspocusProvider({
+    providerRef.current = new HocuspocusProvider({
       url: 'ws://127.0.0.1:1234',
       name: 'chatroom',
       document: ydoc.current,
@@ -36,10 +37,28 @@ const ChatApp = () => {
       setMessages([...messageArray.current.toArray()]);
     });
 
-    return () => {
-      provider?.destroy();
+    providerRef.current.setAwarenessField('user', {
+      clientId: clientId.current,
+      username,
+      isTyping: false,
+      typingText: '',
+    });
+
+    const handleAwarenessUpdate = ({ states }) => {
+      // Transform states into a Map or another suitable format
+      const updatedStates = new Map();
+      Object.keys(states).forEach(key => {
+        updatedStates.set(key, states[key]);
+      });
+      setAwarenessStates(updatedStates);
     };
 
+    providerRef.current.on('awarenessUpdate', handleAwarenessUpdate);
+
+    return () => {
+      providerRef.current?.destroy();
+      providerRef.current?.off('awarenessUpdate', handleAwarenessUpdate);
+    };
   }, []);
 
   const handleSendMessage = () => {
@@ -52,10 +71,25 @@ const ChatApp = () => {
       },
     ]);
     setInputValue('');
+
+    providerRef.current.setAwarenessField('user', {
+      clientId: clientId.current,
+      username,
+      isTyping: false,
+      typingText: '',
+    });
+
   };
 
   const handleMessageInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
+
+    providerRef.current?.setAwarenessField('user', {
+      clientId: clientId.current,
+      username,
+      isTyping: event.target.value === '' ? false : true,
+      typingText: event.target.value,
+    });
   };
 
   const handleChangeUsername = () => {
@@ -67,7 +101,6 @@ const ChatApp = () => {
       }
     }
   };
-
 
   const startChat = () => {
     let newUsername = null;
@@ -111,6 +144,20 @@ const ChatApp = () => {
             </div>
           </div>
         ))}
+
+        {Array.from(awarenessStates.entries()).map(([key, value]) => {
+          const userAwareness = value.user;
+          if (userAwareness && userAwareness.isTyping && userAwareness.clientId !== clientId.current) {
+            return (
+            <div key={userAwareness.clientId} className={styles.typingBubble}>
+              <div className={styles.typingText}>{userAwareness.typingText}</div>
+              <div className={styles.typingUsername}>{userAwareness.username}</div>
+            </div>
+            );
+          }
+          return null;
+        })}
+
         <div ref={bottomOfMessagesRef} />
       </div>
       <div className={styles.messageInputContainer}>

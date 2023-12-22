@@ -126,3 +126,26 @@
 .changeUsernameButton:focus {
   background-color: var(--button-bg-hover-color);
 }
+
+.typingBubble {
+  max-width: 60%;
+  padding: 8px 12px;
+  border-radius: 18px;
+  margin-bottom: 8px;
+  align-self: start;
+  background-color: #cfd8dc;
+  margin-left: 16px;
+  margin-right: auto;
+}
+
+.typingText {
+  color: rgba(0, 0, 0, 0.5);
+  font-style: italic;
+}
+
+.typingUsername {
+  display: block;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+  margin-top: 4px;
+}
