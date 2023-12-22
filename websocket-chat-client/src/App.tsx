@@ -1,10 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { HocuspocusProvider, onAwarenessUpdateParameters } from '@hocuspocus/provider';
+import React, { useEffect, useRef, useState } from 'react';
 import * as Y from 'yjs';
-import { HocuspocusProvider } from '@hocuspocus/provider';
 import styles from './ChatApp.module.css';
+import { IMessage } from './interfaces';
 
 const getColorForClientId = (clientId: string) => {
-  const hash = clientId.split('').reduce((acc: number, char: string) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
+  // Generate a color based on the clientId
+  const hash = clientId.split('').reduce((acc: number, char: string) => {
+    const charCode = char.charCodeAt(0);
+    return acc + charCode;
+  }, 0);
   return `hsl(${hash % 360}, 100%, 70%)`;
 };
 
@@ -19,9 +24,10 @@ const ChatApp = () => {
   const messageArray = useRef<Y.Array<IMessage>>(ydoc.current.getArray<IMessage>('messages'));
   const bottomOfMessagesRef = useRef<HTMLDivElement>(null);
 
-  const providerRef = useRef<HocuspocusProvider>(null);
+  const providerRef = useRef<HocuspocusProvider | null>(null);
   const clientId = useRef(Math.random().toString(2));
 
+  // Scroll to the bottom of the messages container when the messages change
   useEffect(() => {
     bottomOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -33,28 +39,27 @@ const ChatApp = () => {
       document: ydoc.current,
     });
 
-    providerRef.current.setAwarenessField('user', {
-      clientId: clientId.current,
-      username,
-      isTyping: false,
-      typingText: '',
-    });
-
+    // Observe changes to the messages array
     messageArray.current.observe(() => {
       setMessages([...messageArray.current.toArray()]);
     });
 
-    const handleAwarenessUpdate = ({ states }: any) => {
-      // Transform states into a Map or another suitable format
+
+    // Handle awareness updates
+    const handleAwarenessUpdate = ({ states }: onAwarenessUpdateParameters) => {
       const updatedStates = new Map();
-      Object.keys(states).forEach(key => {
-        updatedStates.set(key, states[key]);
-      });
+      for (const [clientId, state] of Object.entries(states)) {
+        updatedStates.set(clientId, state);
+      } 
+
+      // Update the awareness states
       setAwarenessStates(updatedStates);
     };
 
+    // Subscribe to awareness updates
     providerRef.current.on('awarenessUpdate', handleAwarenessUpdate);
 
+    // Clean up
     return () => {
       providerRef.current?.destroy();
       providerRef.current?.off('awarenessUpdate', handleAwarenessUpdate);
@@ -62,6 +67,7 @@ const ChatApp = () => {
   }, []);
 
   const handleSendMessage = () => {
+    // Add the message to the messages array
     messageArray.current.push([
       {
         clientId: clientId.current,
@@ -72,7 +78,8 @@ const ChatApp = () => {
     ]);
     setInputValue('');
 
-    providerRef.current.setAwarenessField('user', {
+    // Update the awareness state
+    providerRef.current?.setAwarenessField('user', {
       clientId: clientId.current,
       username,
       isTyping: false,
@@ -84,6 +91,7 @@ const ChatApp = () => {
   const handleMessageInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
 
+    // Update the awareness state
     providerRef.current?.setAwarenessField('user', {
       clientId: clientId.current,
       username,
@@ -93,7 +101,10 @@ const ChatApp = () => {
   };
 
   const handleChangeUsername = () => {
+    // Set the username to null to trigger the prompt
     let newUsername = null;
+    
+    // Loop until the user enters a username
     while (!newUsername) {
       newUsername = prompt('Please enter a new username:');
       if (newUsername) {
@@ -102,6 +113,7 @@ const ChatApp = () => {
     }
   };
 
+  // Start the chat
   const startChat = () => {
     let newUsername = null;
     while (!newUsername) {
@@ -112,6 +124,7 @@ const ChatApp = () => {
   };
 
 
+  // If the user hasn't entered a username, prompt them to do so
   if (!readyToChat) {
     return (
       <div className={styles.startChatButtonContainer}>
@@ -119,6 +132,7 @@ const ChatApp = () => {
       </div>
     );
   }
+
 
   return (
     <div className={styles.chatContainer}>
@@ -129,6 +143,7 @@ const ChatApp = () => {
         </button>
       </div>
       <div className={styles.messagesList}>
+        {/* Render the messages */}
         {messages.map((message, index) => (
           <div
             key={index}
@@ -145,6 +160,7 @@ const ChatApp = () => {
           </div>
         ))}
 
+        {/* Render the typing bubbles */}
         {Array.from(awarenessStates.entries()).map(([, value]) => {
           const userAwareness = value.user;
           if (userAwareness && userAwareness.isTyping && userAwareness.clientId !== clientId.current) {
@@ -158,8 +174,11 @@ const ChatApp = () => {
           return null;
         })}
 
+        {/* Render the bottom of the messages container for scrolling*/}
         <div ref={bottomOfMessagesRef} />
       </div>
+
+      {/* Render the message input */}
       <div className={styles.messageInputContainer}>
         <input
           type="text"
