@@ -5,13 +5,12 @@ import styles from './ChatApp.module.css';
 import { IMessage } from './interfaces';
 
 const getColorForClientId = (clientId: string) => {
-  // Generate a color based on the clientId
-  const hash = clientId.split('').reduce((acc: number, char: string) => {
-    const charCode = char.charCodeAt(0);
-    return acc + charCode;
-  }, 0);
+  // Generate a color based on the client ID
+  // https://stackoverflow.com/questions/3426404/create-a-hexadecimal-colour-based-on-a-string-with-javascript
+  const hash = clientId.split('').reduce((acc: number, char: string) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
   return `hsl(${hash % 360}, 100%, 70%)`;
 };
+
 
 const ChatApp = () => {
   const [username, setUsername] = useState<string>('');
@@ -50,7 +49,7 @@ const ChatApp = () => {
       const updatedStates = new Map();
       for (const [clientId, state] of Object.entries(states)) {
         updatedStates.set(clientId, state);
-      } 
+      }
 
       // Update the awareness states
       setAwarenessStates(updatedStates);
@@ -103,7 +102,7 @@ const ChatApp = () => {
   const handleChangeUsername = () => {
     // Set the username to null to trigger the prompt
     let newUsername = null;
-    
+
     // Loop until the user enters a username
     while (!newUsername) {
       newUsername = prompt('Please enter a new username:');
